@@ -30,5 +30,6 @@
 	<classpathentry kind="lib" path="C:/Users/ElfenLied/hibernate-release-5.2.9.Final/lib/osgi/org.osgi.core-4.3.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ElfenLied/hibernate-release-5.2.9.Final/lib/jpa-metamodel-generator/hibernate-jpamodelgen-5.2.9.Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ElfenLied/hibernate-release-5.2.9.Final/lib/envers/hibernate-envers-5.2.9.Final.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
