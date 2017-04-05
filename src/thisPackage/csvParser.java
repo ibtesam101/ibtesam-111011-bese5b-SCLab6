@@ -10,21 +10,70 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;  
 import org.hibernate.service.ServiceRegistry;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.hibernate.cfg.annotations.*;
+
+import org.hibernate.Session;
+
+
+import org.hibernate.Transaction;
+
 
 public class csvParser {
 	
-	public static void main(String[] args){
-		//creating configuration object  
-		/*Configuration cfg=new Configuration();  
-		cfg.configure("/thisPackage/hibernate.cfg.xml");//populates the data of the configuration file  
-
-		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties()). build();
-		*/
-		
-		//SessionFactory factory=cfg.buildSessionFactory(serviceRegistry);
-		//creating session object  
-		
+	Session currSession = null;
+	
+	public csvParser(){
 		SessionFactory factory= new Configuration().configure("/thisPackage/hibernate.cfg.xml").buildSessionFactory();
+		
+		currSession = factory.openSession();
+	}
+	
+	public void endSession(){
+		currSession.close();
+	}
+	
+	public void printCities(){
+
+		Query query=currSession.createQuery("from City");
+
+		List<CityAnnotations> list=((org.hibernate.query.Query) query).list();
+
+		Iterator<CityAnnotations> itr=list.iterator();
+
+		while(itr.hasNext()){
+
+			CityAnnotations city=itr.next();
+
+			System.out.println("City Name: "+city.getCity());
+
+			}
+
+		}
+	
+	public void save(ArrayList<CityAnnotations> cityList){
+
+		
+		Transaction t=currSession.beginTransaction();
+
+		for(int i=0;i<cityList.size();i++){
+
+			currSession.persist(cityList.get(i));
+
+		}
+
+			t.commit();
+
+		}
+	
+	public static void main(String[] args){
+		ArrayList<CityAnnotations> myCityList = new ArrayList<CityAnnotations>();
+		
+		csvParser myC = new csvParser();
 		String csvFile = "GeoLiteCity-Location.csv";
 		String line = "";
 		String cvsSplitBy = ",";
@@ -38,19 +87,14 @@ public class csvParser {
 		try {
 
             br = new BufferedReader(new FileReader(csvFile));
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null  && count <1000) {
 
             	if(count>2){
-            		
-            		Session session=factory.openSession();  
-        			//creating transaction object  
-            		Transaction t=session.beginTransaction();  
 
-        		
 	                // use comma as separator
 	                String[] city = line.split(cvsSplitBy);
 	
-	                City c = new City();
+	                CityAnnotations c = new CityAnnotations();
 	                
 	                System.out.println("City [id= " + city[0] + " , country="+city[1]+ "]"+
 	                		"[region= " + city[2] + " , city="+city[3]+ "]"+
@@ -78,16 +122,15 @@ public class csvParser {
 	                catch(NumberFormatException e){
 	                	
 	                }
+	                myCityList.add(c);
 
-	                session.persist(c);
-	                t.commit();
-
-	        		session.close();
             	}
             	
             	count++;
                 
             }
+            
+            
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -103,5 +146,7 @@ public class csvParser {
             }
         }
 		
+		myC.save(myCityList);
+		myC.printCities();
 	}
 }
