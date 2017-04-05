@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">  
+      
+     <hibernate-mapping>  
+      <class name="thisPackage.City" table="city">  
+        <id name="locId">  
+         <generator class="assigned"></generator>  
+        </id>  
+        <property name="Country"></property>
+        <property name="Region"></property>  
+        <property name="City"></property>
+        <property name="PostalCode"></property>  
+        <property name="Latitude"></property>
+        <property name="Longitude"></property>  
+                
+      </class>  
+                
+     </hibernate-mapping> 
